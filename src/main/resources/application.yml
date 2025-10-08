@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: security
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/security
+    username: postgres
+    password: "4444"
+
+  jpa:
+    hibernate:
+      ddl-auto: create              # 필요에 맞게 validate/create/update 등
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    # 선택: open-in-view 비활성화 권장
+    jpa:
+      open-in-view: false
