@@ -9,10 +9,8 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create              # 필요에 맞게 validate/create/update 등
+      ddl-auto: create   # validate / update / create-drop 등 상황에 맞게 선택
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
-    # 선택: open-in-view 비활성화 권장
-    jpa:
-      open-in-view: false
+    open-in-view: false   # 옵션: OSIV 비활성화 (권장)
