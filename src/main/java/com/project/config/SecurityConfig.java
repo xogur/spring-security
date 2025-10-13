@@ -6,11 +6,17 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity // 스프링 시큐리티 필터가 스프링 필터체인에 등록됨.
 public class SecurityConfig {
+
+    @Bean
+    public BCryptPasswordEncoder encodePwd() {
+        return new BCryptPasswordEncoder ();
+    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -22,7 +28,7 @@ public class SecurityConfig {
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().permitAll()
                 )
-                .formLogin(form -> form.loginPage("/login"));
+                .formLogin(form -> form.loginPage("/loginForm"));
 
         return http.build();
     }
