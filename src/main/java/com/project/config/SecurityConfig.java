@@ -1,5 +1,7 @@
 package com.project.config;
 
+import com.project.config.oauth.PrincipalOauth2UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -15,6 +17,9 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity // 스프링 시큐리티 필터가 스프링 필터체인에 등록됨.
 @EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
 public class SecurityConfig {
+
+    @Autowired
+    private PrincipalOauth2UserService principalOauth2UserService;
 
     @Bean
     public BCryptPasswordEncoder encodePwd() {
@@ -37,9 +42,18 @@ public class SecurityConfig {
                         .defaultSuccessUrl ("/")
                 )
                 .oauth2Login(oauth2 -> oauth2
-                                .loginPage("/loginForm")       // 동일한 커스텀 로그인 페이지 사용
-                        .defaultSuccessUrl("/")     // 필요 시 명시
-                        // .failureUrl("/loginForm?error") // 필요 시 명시
+                                // 커스텀 로그인 페이지
+                                .loginPage("/loginForm")
+
+                                // 사용자 정보 엔드포인트에 커스텀 OAuth2UserService 연결
+                                .userInfoEndpoint(userInfo -> userInfo
+                                        .userService(principalOauth2UserService)
+                                )
+
+                         .defaultSuccessUrl("/", true) // 위 successHandler 대신 단순 리다이렉트만 할 경우 이 줄을 사용
+
+                        // 로그인 실패 시 이동 페이지 필요하면 주석 해제
+                        // .failureUrl("/loginForm?error")
                 );
 
         return http.build();
