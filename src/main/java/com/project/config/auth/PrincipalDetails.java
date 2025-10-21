@@ -6,19 +6,33 @@ package com.project.config.auth;
 // 오브젝트 => Authentication타입 객체
 
 import com.project.model.User;
+import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
-public class PrincipalDetails implements UserDetails {
+@Data
+public class PrincipalDetails implements UserDetails, OAuth2User {
 
     private User user;
 
     public PrincipalDetails(User user) {
         this.user = user;
+    }
+
+    @Override
+    public <A> A getAttribute(String name) {
+        return OAuth2User.super.getAttribute (name);
+    }
+
+    @Override
+    public Map<String, Object> getAttributes() {
+        return Map.of ();
     }
 
     //유저의 권한을 리턴하는 곳
@@ -64,5 +78,10 @@ public class PrincipalDetails implements UserDetails {
     public boolean isEnabled() {
         //휴먼계정 같은 로직
         return true;
+    }
+
+    @Override
+    public String getName() {
+        return "";
     }
 }
